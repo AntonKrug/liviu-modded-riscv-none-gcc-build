@@ -2259,6 +2259,14 @@ copy_license_files() {
 
 
 # ----- Copy the GNU MCU Eclipse info files. -----
+
+copy_info_file() {
+    /usr/bin/install -cv -m 644 \
+      "${build_folder_path}/$1/configure-output.txt" \
+      "${app_prefix}/gnu-mcu-eclipse/$2-configure-output.txt"
+    do_unix2dos "${app_prefix}/gnu-mcu-eclipse/$2-configure-output.txt"  
+}
+
 copy_info_files() {
   info_stamp_file="${build_folder_path}/stamp_info_completed"
 
@@ -2266,20 +2274,19 @@ copy_info_files() {
   then
     do_container_copy_info
 
-    /usr/bin/install -cv -m 644 \
-      "${build_folder_path}/${binutils_folder}/configure-output.txt" \
-      "${app_prefix}/gnu-mcu-eclipse/binutils-configure-output.txt"
-    do_unix2dos "${app_prefix}/gnu-mcu-eclipse/binutils-configure-output.txt"
+    copy_info_file ${GMP_FOLDER_NAME} "gmp"
+    copy_info_file ${MPFR_FOLDER_NAME} "mpfr"
+    copy_info_file ${MPC_FOLDER_NAME} "mpc"
+    copy_info_file ${ISL_FOLDER_NAME} "isl"
+    copy_info_file ${EXPAT_FOLDER_NAME} "expat"
+    if [ -n "${do_xml}" ]
+    then
+      copy_info_file ${EXPAT_FOLDER_NAME} "expat"
+    fi
 
-    /usr/bin/install -cv -m 644 \
-      "${build_folder_path}/${newlib_folder}/configure-output.txt" \
-      "${app_prefix}/gnu-mcu-eclipse/newlib-configure-output.txt"
-    do_unix2dos "${app_prefix}/gnu-mcu-eclipse/newlib-configure-output.txt"
-
-    /usr/bin/install -cv -m 644 \
-      "${build_folder_path}/${gcc_stage2_folder}/configure-output.txt" \
-      "${app_prefix}/gnu-mcu-eclipse/gcc-configure-output.txt"
-    do_unix2dos "${app_prefix}/gnu-mcu-eclipse/gcc-configure-output.txt"
+    copy_info_file ${binutils_folder} "binutils"
+    copy_info_file ${newlib_folder} "newlib"
+    copy_info_file ${gcc_stage2_folder} "gcc"
 
     touch "${info_stamp_file}"
   fi
