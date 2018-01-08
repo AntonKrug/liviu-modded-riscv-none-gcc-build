@@ -1154,7 +1154,7 @@ build_expat() {
     configure_run
 
     echo
-    echo "Running gmp make..."
+    echo "Running expat make..."
 
     # Build.
     # make clean
@@ -1203,6 +1203,7 @@ build_gmp() {
     elif [ \( "${target_os}" == "osx" \) -o \( "${target_os}" == "linux" \) ]
     then
       configure_add_env "CFLAGS=\"-Wno-unused-value -Wno-empty-translation-unit -Wno-tautological-compare -m${target_bits} -pipe -ffunction-sections -fdata-sections\""
+      configure_add_arg "--host=\"pentium4-pc-linux-gnu\""  # setting what is the minimum requirement on CPU to run GMP dependant tools (GCC)
     fi
 
     configure_run
@@ -1223,6 +1224,7 @@ build_gmp() {
     touch "${gmp_stamp_file}"
   fi
 }
+
 
 
 
@@ -1257,7 +1259,6 @@ build_mpfr() {
       configure_add_env "CFLAGS=\"-m${target_bits} -pipe -ffunction-sections -fdata-sections\""
     fi
     configure_run
-
 
     echo
     echo "Running mpfr make..."
